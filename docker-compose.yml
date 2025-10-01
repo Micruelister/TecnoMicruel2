@@ -1,0 +1,35 @@
+# Este archivo utiliza Docker Compose para definir y ejecutar aplicaciones multi-contenedor.
+# En nuestro caso, lo usaremos para crear y gestionar fácilmente nuestra base de datos PostgreSQL.
+# Con este archivo, puedes levantar la base de datos con un simple comando: `docker-compose up -d`.
+
+version: '3.8' # Especifica la versión de la sintaxis de Docker Compose.
+
+services:
+  # Aquí definimos los servicios (contenedores) que queremos ejecutar.
+  # En este caso, solo tenemos un servicio: la base de datos.
+  postgres_db:
+    image: postgres:13 # Usamos la imagen oficial de PostgreSQL, versión 13. Docker la descargará automáticamente.
+    container_name: ecommerce-postgres-db # Un nombre amigable para nuestro contenedor.
+    restart: always # Le dice a Docker que reinicie automáticamente el contenedor si se detiene por alguna razón.
+    environment:
+      # Estas son las variables de entorno para configurar la base de datos.
+      # ¡IMPORTANTE! Deben coincidir exactamente con las que usaremos en el archivo .env del backend.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecommerce_db
+    ports:
+      # Mapea el puerto 5432 del contenedor al puerto 5432 de tu máquina local (host).
+      # Esto permite que nuestra aplicación de backend (que se ejecuta en el host) se conecte
+      # a la base de datos que se está ejecutando dentro del contenedor Docker.
+      # Formato: "HOST:CONTAINER"
+      - "5432:5432"
+    volumes:
+      # Los volúmenes se usan para persistir los datos de la base de datos.
+      # Si el contenedor se detiene o se elimina, los datos guardados en el volumen `postgres-data`
+      # no se perderán. Al volver a levantar el contenedor, los datos seguirán ahí.
+      - postgres-data:/var/lib/postgresql/data
+
+# Aquí definimos los volúmenes que hemos referenciado arriba.
+volumes:
+  postgres-data:
+    driver: local # Usamos el driver de volúmenes local estándar.
