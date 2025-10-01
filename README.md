@@ -140,3 +140,17 @@ Para que la aplicación funcione, necesitas tener tres procesos ejecutándose al
 [http://localhost:3000/register](http://localhost:3000/register)
 
 Deberías ver el formulario de registro que hemos creado. ¡Ya puedes probar a registrar un nuevo usuario!
+
+---
+
+## Solución de Problemas Comunes
+
+### Error: `password authentication failed for user "..."`
+
+Este es el error más común al iniciar el backend por primera vez.
+
+-   **Causa**: La aplicación de backend no está logrando conectarse a la base de datos porque no está usando las credenciales correctas. Generalmente, esto ocurre porque no está encontrando o no está leyendo correctamente el archivo `.env`.
+-   **Solución**:
+    1.  **Verifica el archivo `api/.env`**: Asegúrate de que el archivo existe en la raíz del directorio `/api` y que se llama exactamente `.env` (no `.env.example` ni `.env.txt`).
+    2.  **Verifica el contenido**: Abre `api/.env` y confirma que los valores de `DB_USERNAME` y `DB_PASSWORD` son `postgres`, tal como se definen en el `docker-compose.yml`.
+    3.  **Reinicia el backend**: Si hiciste algún cambio en el archivo `.env`, el servidor de NestJS **no lo detectará automáticamente**. Detén el servidor (`Ctrl + C`) y vuelve a iniciarlo con `npm run start:dev`.
